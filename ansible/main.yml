@@ -1,0 +1,71 @@
+---
+- hosts: all
+  tasks:
+    - block:
+      - name: Install 7.1 dependencies
+        apt: name=software-properties-common state=present
+      - name: Install PHP 7.1 PPA repo
+        apt_repository: repo=ppa:ondrej/php
+      - name: Run the equivalent of "apt-get update" as a separate step
+        apt: update_cache=yes
+      - name: Install Packages
+        apt: name={{ item }} state=present
+        with_items:
+          - nginx
+          - mysql-server
+          - php7.1
+          - php7.1-fpm
+          - php7.1-cli
+          - php7.1-common
+          - php7.1-json
+          - php7.1-opcache
+          - php7.1-mysql
+          - php7.1-mbstring
+          - php7.1-mcrypt
+          - php7.1-zip
+          - php7.1-fpm
+          - php7.1-ldap
+          - php7.1-tidy
+          - php7.1-recode
+          - php7.1-curl
+      - name: Patch PHP.ini (fix_pathinfo)
+        lineinfile: dest=/etc/php/7.1/fpm/php.ini regexp='^cgi\.fix_pathinfo=0' line='cgi.fix_pathinfo=0'
+        notify: [restart_nginx, restart_php_fpm]
+      - name: Patch PHP.ini (post_max_size)
+        lineinfile: dest=/etc/php/7.1/fpm/php.ini regexp='^post_max_size =' line='post_max_size = 4G'
+        notify: [restart_nginx, restart_php_fpm]
+      - name: Patch PHP.ini (upload_max_filesize)
+        lineinfile: dest=/etc/php/7.1/fpm/php.ini regexp='^upload_max_filesize =' line='upload_max_filesize = 4G'
+        notify: [restart_nginx, restart_php_fpm]
+      - name: Replaces Nginx conf file
+        template: src=config/default.j2 dest=/etc/nginx/sites-available/default
+        notify: restart_nginx
+      - name: Prepares vhost folders
+        file: dest=/var/www/{{ item }} state=directory mode=0755
+        with_items:
+          - phpconf.asia
+          - cfp.phpconf.asia
+        notify: restart_nginx
+      - name: Nginx vhost conf files
+        template: src=config/{{ item }}.j2 dest=/etc/nginx/sites-available/{{ item }}
+        with_items:
+          - phpconf.asia
+          - cfp.phpconf.asia
+        notify: restart_nginx
+      - name: Symlink vhost files
+        file: src=/etc/nginx/sites-available/{{ item }} dest=/etc/nginx/sites-enabled/{{ item }} state=link
+        with_items:
+          - phpconf.asia
+          - cfp.phpconf.asia
+        notify: restart_nginx
+      become: yes
+      become_method: sudo
+  handlers:
+    - name: restart_nginx
+      service: name=nginx enabled=yes state=restarted
+      become: yes
+      become_method: sudo
+    - name: restart_php_fpm
+      service: name=php7.1-fpm enabled=yes state=restarted
+      become: yes
+      become_method: sudo
