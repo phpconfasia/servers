@@ -1,6 +1,4 @@
 server {
-  listen 80;
-  listen [::]:80;
   root /var/www/cfp.phpconf.asia;
   index index.php index.html index.htm;
   server_name  cfp.phpconf.asia www.cfp.phpconf.asia;
@@ -20,4 +18,48 @@ server {
   location ~ /\.ht {
     deny all;
   }
+
+    listen [::]:443 ssl ipv6only=on; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/cfp.phpconf.asia/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/cfp.phpconf.asia/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
 }
+
+server {
+    if ($host = cfp.phpconf.asia) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+  listen 80;
+  listen [::]:80;
+  server_name  cfp.phpconf.asia www.cfp.phpconf.asia;
+  return 404; # managed by Certbot
+}
+
+# server {
+#   listen 80;
+#   listen [::]:80;
+#   root /var/www/cfp.phpconf.asia;
+#   index index.php index.html index.htm;
+#   server_name  cfp.phpconf.asia www.cfp.phpconf.asia;
+
+#   client_max_body_size 100M;
+
+#   location / {
+#     try_files $uri $uri/ =404;
+#   }
+
+#   location ~ \.php$ {
+#     include snippets/fastcgi-php.conf;
+#     fastcgi_pass unix:/run/php/php7.1-fpm.sock;
+#     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+#   }
+
+#   location ~ /\.ht {
+#     deny all;
+#   }
+# }

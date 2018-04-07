@@ -4,8 +4,11 @@
     - block:
       - name: Install 7.1 dependencies
         apt: name=software-properties-common state=present
-      - name: Install PHP 7.1 PPA repo
-        apt_repository: repo=ppa:ondrej/php
+      - name: Install Additional PPA Repos
+        apt_repository: repo={{ item }}
+        with_items:
+          - ppa:ondrej/php
+          - ppa:certbot/certbot
       - name: Run the equivalent of "apt-get update" as a separate step
         apt: update_cache=yes
       - name: Install Packages
@@ -28,6 +31,7 @@
           - php7.1-tidy
           - php7.1-recode
           - php7.1-curl
+          - python-certbot-nginx
       - name: Patch PHP.ini (fix_pathinfo)
         lineinfile: dest=/etc/php/7.1/fpm/php.ini regexp='^cgi\.fix_pathinfo=0' line='cgi.fix_pathinfo=0'
         notify: [restart_nginx, restart_php_fpm]
