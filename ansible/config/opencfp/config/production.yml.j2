@@ -1,0 +1,78 @@
+application:
+  title: PHPConf.Asia 2018
+  url: https://cfp.phpconf.asia
+  email: admin@phpconf.asia
+  eventurl: https://2018.phpconf.asia
+  event_location: Singapore
+  enddate: 1st June 2018
+  show_submission_count: true
+  airport: SIN
+  arrival: 2018-09-25
+  departure: 2018-09-30
+  secure_ssl: true
+  online_conference: false
+  date_format: d M Y
+  date_timezone: "Asia/Singapore"
+  coc_link: https://2018.phpconf.asia/code-of-conduct.html
+  show_contrib_banner: false
+  venue_image_path: /assets/img/kent_ridge_banner.jpg
+
+database:
+  host: {{ db_host }}
+  database: {{ db_name }}
+  dsn: mysql:dbname={{ db_name }};host={{ db_host }}
+  user: {{ db_username }}
+  password: {{ db_password }}
+
+log:
+  level: debug
+
+cache:
+  enabled: false
+
+mail:
+  host: {{ smtp_host }}
+  port: {{ smtp_port }}
+  username: {{ smtp_username }}
+  password: "{{ smtp_password }}"
+  encryption: tls
+  auth_mode: ~
+
+talk:
+  categories:
+    api: APIs (REST, SOAP, etc.)
+    continuousdelivery: Continuous Delivery
+    casestudy: Case Study
+    database: Database
+    development: Development
+    devops: Devops
+    framework: Framework
+    javascript: JavaScript
+    personal: Personal Skills
+    security: Security
+    testing: Testing
+    uiux: UI/UX
+    other: Other
+    bigdata: Big Data
+    machinelearning: Machine Learning
+    ai: Artificial Intellegence
+    iot: Internet of Things
+  levels:
+    entry: Entry level
+    mid: Mid-level
+    advanced: Advanced
+  types:
+    regular: Regular (40 mins)
+    tutorial: Tutorial (3 hrs)
+    lightning: Lightning Talk (10 mins)
+
+security:
+  firewalls:
+    secured_area:
+      form_forgot:
+        csrf_parameter: _csrf_security_token
+        csrf_token_id: forgot_password
+
+reviewer:
+  users:
+    -

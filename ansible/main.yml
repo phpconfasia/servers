@@ -1,6 +1,8 @@
 ---
 - hosts: all
   tasks:
+    - name: Load env.yml
+      include_vars: file=env.yml
     - block:
       - name: Install 7.1 dependencies
         apt: name=software-properties-common state=present
@@ -31,6 +33,8 @@
           - php7.1-tidy
           - php7.1-recode
           - php7.1-curl
+          - php7.1-dom
+          - php7.1-xml
           - python-certbot-nginx
       - name: Patch PHP.ini (fix_pathinfo)
         lineinfile: dest=/etc/php/7.1/fpm/php.ini regexp='^cgi\.fix_pathinfo=0' line='cgi.fix_pathinfo=0'
@@ -41,14 +45,23 @@
       - name: Patch PHP.ini (upload_max_filesize)
         lineinfile: dest=/etc/php/7.1/fpm/php.ini regexp='^upload_max_filesize =' line='upload_max_filesize = 4G'
         notify: [restart_nginx, restart_php_fpm]
+      - name: Install Composer
+        include: composer.yml
       - name: Replaces Nginx conf file
         template: src=config/default.j2 dest=/etc/nginx/sites-available/default
         notify: restart_nginx
+      - name: Copy OpenCFP files
+        copy: src=../opencfp dest=/var/www/
+        notify: [restart_nginx, restart_php_fpm]
+      - name: OpenCFP Production Config
+        template: src=config/opencfp/config/production.yml.j2 dest=/var/www/opencfp/config/production.yml
+        notify: [restart_nginx, restart_php_fpm]
+      - name: Copy venue image
+        copy: src=config/opencfp/web/assets/img/kent_ridge_banner.jpg dest=/var/www/opencfp/web/assets/img/kent_ridge_banner.jpg mode=0644
       - name: Prepares vhost folders
         file: dest=/var/www/{{ item }} state=directory mode=0755
         with_items:
           - phpconf.asia
-          - cfp.phpconf.asia
         notify: restart_nginx
       - name: Nginx vhost conf files
         template: src=config/{{ item }}.j2 dest=/etc/nginx/sites-available/{{ item }}

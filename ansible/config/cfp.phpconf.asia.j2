@@ -1,18 +1,27 @@
 server {
-  root /var/www/cfp.phpconf.asia;
+  root /var/www/opencfp/web;
   index index.php index.html index.htm;
   server_name  cfp.phpconf.asia www.cfp.phpconf.asia;
 
   client_max_body_size 100M;
 
+  access_log /var/log/nginx/access.cfp.phpconf.asia.log;
+	error_log /var/log/nginx/error.cfp.phpconf.asia.log;
+
   location / {
-    try_files $uri $uri/ =404;
-  }
+		try_files $uri $uri/ /index.php?$query_string;
+	}
 
   location ~ \.php$ {
-    include snippets/fastcgi-php.conf;
+    try_files $uri =404;
+
+    fastcgi_param CFP_ENV production;
+    fastcgi_split_path_info ^(.+\.php)(/.+)$;
     fastcgi_pass unix:/run/php/php7.1-fpm.sock;
+    fastcgi_read_timeout 150;
+    fastcgi_index index.php;
     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    include fastcgi_params;
   }
 
   location ~ /\.ht {
