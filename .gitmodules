@@ -1,0 +1,3 @@
+[submodule "opencfp"]
+	path = opencfp
+	url = git@github.com:phpconfasia/opencfp.git
