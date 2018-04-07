@@ -2,21 +2,12 @@ server {
   listen 80;
   listen [::]:80;
   root /var/www/phpconf.asia;
-  index index.php index.html index.htm;
   server_name  phpconf.asia www.phpconf.asia;
 
   include /etc/nginx/snippets/letsencrypt.conf;
 
-  client_max_body_size 100M;
-
   location / {
-    try_files $uri $uri/ =404;
-  }
-
-  location ~ \.php$ {
-    include snippets/fastcgi-php.conf;
-    fastcgi_pass unix:/run/php/php7.1-fpm.sock;
-    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    return 301 https://2018.phpconf.asia;
   }
 
   location ~ /\.ht {
