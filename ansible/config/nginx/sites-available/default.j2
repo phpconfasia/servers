@@ -14,8 +14,10 @@
 # Default server configuration
 #
 server {
-	# listen 80 default_server;
-	# listen [::]:80 default_server;
+	listen 80 default_server;
+	listen [::]:80 default_server;
+
+	include /etc/nginx/snippets/letsencrypt.conf;
 
 	# SSL configuration
 	#

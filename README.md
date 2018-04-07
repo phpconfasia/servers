@@ -13,17 +13,24 @@
     FLUSH PRIVILEGES;
     ```
 
-3. Prepare folder
+3. Prepare folders
 
     ```
-    chmod 777 bin/*
-    chmod 777 script/*
-    script/setup
+    CFP_ENV=production script/setup
+    chmod -R 777 cache
+    chmod -R 777 log
+    chmod -R 777 web/uploads
+    chown -R www-data:www-data cache
     ```
 
 4. Prepare Letsencrypt (https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-16-04):
 
     ```
-    sudo certbot --nginx -d cfp.phpconf.asia
+    certbot certonly --webroot --agree-tos --no-eff-email --email admin@phpconf.asia -w /var/www/letsencrypt -d cfp.phpconf.asia
     ```
 
+5. Promote user
+
+    ```
+    bin/console user:promote --env=production admin@phpconf.asia admin
+    ```

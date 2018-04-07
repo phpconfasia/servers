@@ -48,9 +48,17 @@
         notify: [restart_nginx, restart_php_fpm]
       - name: Install Composer
         include: composer.yml
-      - name: Replaces Nginx conf file
-        template: src=config/nginx/sites-available/default.j2 dest=/etc/nginx/sites-available/default
+
+      - name: Let's Encrypt Nginx snippets
+        copy: src=config/nginx/snippets/{{ item }}.conf dest=/etc/nginx/snippets/{{ item }}.conf mode=0644
+        with_items:
+          - letsencrypt
+          - ssl
         notify: restart_nginx
+      - name: Prepare Letsencrypt folder
+        file: path=/var/www/letsencrypt/.well-known/acme-challenge state=directory mode=0755
+        notify: restart_nginx
+
       - name: Copy OpenCFP files
         copy: src=../opencfp dest=/var/www/ owner=www-data group=www-data
         notify: [restart_nginx, restart_php_fpm]
@@ -67,6 +75,10 @@
         notify: [restart_nginx, restart_php_fpm]
       - name: Copy venue image
         copy: src=config/opencfp/web/assets/img/kent_ridge_banner.jpg dest=/var/www/opencfp/web/assets/img/kent_ridge_banner.jpg mode=0644
+
+      - name: Replaces Nginx conf file
+        template: src=config/nginx/sites-available/default.j2 dest=/etc/nginx/sites-available/default
+        notify: restart_nginx
       - name: Prepares vhost folders
         file: dest=/var/www/{{ item }} state=directory mode=0755
         with_items:

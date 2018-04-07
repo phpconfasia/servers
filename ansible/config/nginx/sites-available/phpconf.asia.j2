@@ -5,6 +5,8 @@ server {
   index index.php index.html index.htm;
   server_name  phpconf.asia www.phpconf.asia;
 
+  include /etc/nginx/snippets/letsencrypt.conf;
+
   client_max_body_size 100M;
 
   location / {
