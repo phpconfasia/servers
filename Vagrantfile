@@ -72,7 +72,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provider :linode do |provider, override|
-    override.ssh.username = 'esgadmin'
+    override.ssh.username = 'devops'
     override.ssh.private_key_path = '~/.ssh/id_rsa'
     override.vm.box = 'linode/ubuntu1404'
     override.nfs.functional = false
