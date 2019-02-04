@@ -17,6 +17,7 @@
         apt: name={{ item }} state=present
         with_items:
           - nginx
+          - rsync
           - mysql-server
           - php7.1
           - php7.1-fpm
@@ -59,9 +60,14 @@
         file: path=/var/www/letsencrypt/.well-known/acme-challenge state=directory mode=0755
         notify: restart_nginx
 
-      - name: Copy OpenCFP files
-        copy: src=../opencfp dest=/var/www/ owner=www-data group=www-data
+      # - name: Copy OpenCFP files
+      #   copy: src=../opencfp dest=/var/www/ owner=www-data group=www-data
+      #   notify: [restart_nginx, restart_php_fpm]
+      - name: RSync OpenCFP files
+        synchronize: src=../opencfp dest=/var/www/ recursive=yes owner=no group=no
         notify: [restart_nginx, restart_php_fpm]
+      - name: Switch ownership to www-data
+        file: path=/var/www/opencfp owner=www-data group=www-data recurse=yes
       - name: Make files executable
         file: path=/var/www/opencfp/{{ item }} mode=0777
         with_items:
