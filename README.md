@@ -4,7 +4,9 @@
 
 1. Rename `ansible/hosts.sample` to `ansible/hosts`
 
-2. Run the Ansible Playbook
+2. Update the server config in the `hosts` file.
+
+3. Run the Ansible Playbook
 
     ```
     cd ansible
