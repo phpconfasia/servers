@@ -79,8 +79,6 @@
       - name: OpenCFP Production Config
         template: src=config/opencfp/config/{{ opencfp_env }}.yml.j2 dest=/var/www/opencfp/config/{{ opencfp_env }}.yml
         notify: [restart_nginx, restart_php_fpm]
-      - name: Copy venue image
-        copy: src=config/opencfp/web/assets/img/kent_ridge_banner.jpg dest=/var/www/opencfp/web/assets/img/kent_ridge_banner.jpg mode=0644
 
       - name: Replaces Nginx conf file
         template: src=config/nginx/sites-available/default.j2 dest=/etc/nginx/sites-available/default
