@@ -1,5 +1,16 @@
 # PHPConf.Asia Server Setup Scripts
 
+## Running Ansible Script
+
+1. Rename `ansible/hosts.sample` to `ansible/hosts`
+
+2. Run the Ansible Playbook
+
+    ```
+    cd ansible
+    ansible-playbook -i ./hosts main.yml
+    ```
+
 ## Additional Steps
 
 1. Run `mysql_secure_installation`
