@@ -1,21 +1,21 @@
 application:
-  title: PHPConf.Asia 2018
+  title: PHPConf.Asia 2019
   url: https://cfp.phpconf.asia
   email: admin@phpconf.asia
-  eventurl: https://2018.phpconf.asia
+  eventurl: https://2019.phpconf.asia
   event_location: Singapore
-  enddate: 1st June 2018
+  enddate: 8th March 2019
   show_submission_count: true
   airport: SIN
-  arrival: 2018-09-26
-  departure: 2018-09-29
+  arrival: 2019-06-24
+  departure: 2019-06-25
   secure_ssl: true
   online_conference: false
   date_format: d M Y
   date_timezone: "Asia/Singapore"
-  coc_link: https://2018.phpconf.asia/code-of-conduct.html
+  coc_link: https://2019.phpconf.asia/code-of-conduct.html
   show_contrib_banner: false
-  venue_image_path: /assets/img/kent_ridge_banner.jpg
+  venue_image_path: /assets/img/phpconfasia.jpg
 
 database:
   host: {{ db_host }}
@@ -60,7 +60,6 @@ talk:
     advanced: Advanced
   types:
     regular: Regular (40 mins)
-    tutorial: Tutorial (3 hrs)
     lightning: Lightning Talk (10 mins)
 
 security:
@@ -73,3 +72,12 @@ security:
 reviewer:
   users:
     -
+
+opencfpcentral:
+  sso: off
+  clientId: 0
+  clientSecret: 0
+  authorizeUrl: https://www.opencfpcentral.com/oauth/authorize?
+  redirectUri: hhttps://2019.phpconf.asia/sso/redirect
+  resourceUri: https://www.opencfpcentral.com/api/user
+  tokenUrl: https://www.opencfpcentral.com/oauth/token
